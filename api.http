@@ -1,0 +1,5 @@
+@url = http://localhost:3001
+
+### ToDo List
+GET {{url}}/todo/list
+Content-Type: application/json
