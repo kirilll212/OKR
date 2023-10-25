@@ -5,11 +5,74 @@ class TodoController {
         try {
             const todos = await Todo.findAll()
 
-            res.status(201).json({ message: 'All todos' + todos})
-        } catch (err) {
-            res.status(404).json({ message: 'Not found' })
-        }
+            if (!todos) {
+                res.status(404).json({ message: 'Not found'})
+            }
 
+            res.status(200).json({ message: 'All todos', todos })
+        } catch (err) {
+            res.status(500).json({ message: 'Server error' + err })
+        }
+    }
+    
+    async addTodo(req, res) {
+        try {
+            const { todo } = req.body
+
+            if (typeof todo !== 'string') {
+                res.status(400).json({ message: 'Invalid input data' })
+            }
+
+            const todos = await Todo.create({
+                todo: todo
+            })
+
+            res.status(201).json({ message: `Todo '${todo}' added successfully` })
+        } catch (err) {
+            res.status(500).json({ message: 'Server error' + err })
+        }
+    }
+    
+    async updateTodo(req, res) {
+        const id = req.params.id
+        
+        try {
+            const { todo, completed} = req.body
+
+            if (typeof todo !== 'string') {
+                res.status(400).json({ message: 'Invalid input data' })
+            }
+
+            const todoInstance = await Todo.findByPk(id)
+
+            if (!todoInstance) {
+                res.status(404).json({ message: 'Not found'})
+            }
+
+            await todoInstance.update({ todo, completed })
+
+            res.status(200).json({ message: `Todo with id - '${id}' updated successfully` })
+        } catch (err) {
+            res.status(500).json({ message: 'Server error' + err })
+        }
+    }
+
+    async deleteTodo(req, res) {
+        const id = req.params.id
+
+        try {
+            const todoInstance = await Todo.findByPk(id)
+
+            if (!todoInstance) {
+                res.status(404).json({ message: 'Not found'})
+            }
+
+            await todoInstance.destroy()
+
+            res.status(200).json({ message: `Todo with id - '${id}' deleted successfully` })
+        } catch (err) {
+            res.status(500).json({ message: 'Server error' + err })
+        }
     }
 }
 

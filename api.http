@@ -1,5 +1,26 @@
 @url = http://localhost:3001
 
-### ToDo List
+### GET ToDo List
 GET {{url}}/todo/list
 Content-Type: application/json
+
+### Add ToDo to List
+POST {{url}}/todo/add
+Content-Type: application/json
+
+{
+    "todo": "test1"
+}
+
+### Delete ToDo from List
+DELETE {{url}}/todo/delete/2
+Content-Type: application/json
+
+### Update Todo from List
+PUT {{url}}/todo/update/1
+Content-Type: application/json
+
+{
+    "todo": "test",
+    "completed": true
+}
