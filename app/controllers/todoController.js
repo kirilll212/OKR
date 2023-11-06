@@ -6,7 +6,7 @@ class TodoController {
             const todos = await Todo.findAll()
 
             if (!todos) {
-                res.status(404).json({ message: 'Not found'})
+                res.status(404).json({ message: 'Not found' })
             }
 
             res.status(200).json({ message: 'All todos', todos })
@@ -14,7 +14,7 @@ class TodoController {
             res.status(500).json({ message: 'Server error' + err })
         }
     }
-    
+
     async addTodo(req, res) {
         try {
             const { todo } = req.body
@@ -23,7 +23,7 @@ class TodoController {
                 res.status(400).json({ message: 'Invalid input data' })
             }
 
-            const todos = await Todo.create({
+            await Todo.create({
                 todo: todo
             })
 
@@ -32,12 +32,31 @@ class TodoController {
             res.status(500).json({ message: 'Server error' + err })
         }
     }
-    
+
     async updateTodo(req, res) {
         const id = req.params.id
-        
+
         try {
-            const { todo, completed} = req.body
+            const todo = await Todo.findByPk(id)
+
+            if (!todo) {
+                res.status(404).json({ message: 'Not found' })
+            }
+
+            todo.completed = !todo.completed
+            await todo.save()
+
+            res.status(201).json({ message: `Status of todo - '${todo.todo}' (id - ${id}) updated successfully` })
+        } catch (err) {
+            res.status(500).json({ message: 'Server error' + err })
+        }
+    }
+
+    async editTodo(req, res) {
+        const id = req.params.id
+
+        try {
+            const { todo } = req.body
 
             if (typeof todo !== 'string') {
                 res.status(400).json({ message: 'Invalid input data' })
@@ -46,10 +65,10 @@ class TodoController {
             const todoInstance = await Todo.findByPk(id)
 
             if (!todoInstance) {
-                res.status(404).json({ message: 'Not found'})
+                res.status(404).json({ message: 'Not found' })
             }
 
-            await todoInstance.update({ todo, completed })
+            await todoInstance.update({ todo })
 
             res.status(200).json({ message: `Todo with id - '${id}' updated successfully` })
         } catch (err) {
@@ -64,7 +83,7 @@ class TodoController {
             const todoInstance = await Todo.findByPk(id)
 
             if (!todoInstance) {
-                res.status(404).json({ message: 'Not found'})
+                res.status(404).json({ message: 'Not found' })
             }
 
             await todoInstance.destroy()

@@ -9,18 +9,21 @@ POST {{url}}/todo/add
 Content-Type: application/json
 
 {
-    "todo": "test1"
+    "todo": "test2"
 }
 
 ### Delete ToDo from List
-DELETE {{url}}/todo/delete/2
+DELETE {{url}}/todo/delete/33
 Content-Type: application/json
 
 ### Update Todo from List
-PUT {{url}}/todo/update/1
+PUT {{url}}/todo/edit/9
 Content-Type: application/json
 
 {
-    "todo": "test",
-    "completed": true
+    "todo": "test"
 }
+
+### Edit ToDo status
+PUT {{url}}/todo/update/9
+Content-Type: application/json
